@@ -1,6 +1,8 @@
 package com.wjw.Board.service;
 
 
+import com.wjw.Board.dto.PostRequestDto;
+import com.wjw.Board.dto.PostResponseDto;
 import com.wjw.Board.entity.Post;
 import com.wjw.Board.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
@@ -14,17 +16,30 @@ public class PostService {
     private final PostRepository postRepository;
     //findall,findbyid,create,delete,update
 
-
-    public List<Post> getAll(){
-        return  postRepository.findAll();
+    private PostResponseDto toDto(Post post) {
+        return new PostResponseDto(
+                post.getId(),
+                post.getTitle(),
+                post.getContent(),
+                post.getCreatedAt()
+        );
     }
 
-    public Post getById(Long id){
-        return  postRepository.findById(id).orElseThrow(() -> new RuntimeException("검색되는 게시글이 없습니다."));
+
+    public List<PostResponseDto> getAll(){
+        return  postRepository.findAll().stream().map(post -> toDto(post)).toList();
     }
 
-    public Post join(Post post){
-        return postRepository.save(post);
+    public PostResponseDto getById(Long id){
+        Post pos=  postRepository.findById(id).orElseThrow(() -> new RuntimeException("검색되는 게시글이 없습니다."));
+        return  toDto(pos);
+    }
+
+    public PostResponseDto join(PostRequestDto post){
+        Post post1 = new Post();
+        post1.setTitle(post.title());
+        post1.setContent(post.content());
+        return toDto(postRepository.save(post1));
     }
 
     public void delete(Long id){
@@ -32,11 +47,11 @@ public class PostService {
     }
 
 
-    public Post update(Long id,Post update){
-        Post po = getById(id);
-        po.setTitle(update.getTitle());
-        po.setContent(update.getContent());
-       return postRepository.save(po);
+    public PostResponseDto update(Long id, PostRequestDto update){
+       Post pos = postRepository.findById(id).orElseThrow(() -> new RuntimeException("null"));
+        pos.setTitle(update.title());
+        pos.setContent(update.content());
+        return toDto(postRepository.save(pos));
     }
 
 

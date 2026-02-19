@@ -1,6 +1,8 @@
 package com.wjw.Board.controller;
 
 
+import com.wjw.Board.dto.PostRequestDto;
+import com.wjw.Board.dto.PostResponseDto;
 import com.wjw.Board.entity.Post;
 import com.wjw.Board.service.PostService;
 import lombok.RequiredArgsConstructor;
@@ -18,28 +20,28 @@ public class PostController {
     //todo : getbydi, getAlL, create, update, delete
 
     @GetMapping
-    public List<Post> getAll(){
+    public List<PostResponseDto> getAll(){
         return postService.getAll();
     }
 
     @GetMapping("/{id}")
-    public Post getById(@PathVariable Long id){
+    public PostResponseDto getById(@PathVariable Long id){
         return postService.getById(id);
     }
 
 
     @PostMapping
-    public ResponseEntity<Post> create(@RequestBody Post post){
+    public ResponseEntity<PostResponseDto> create(@RequestBody PostRequestDto post){
         return ResponseEntity.ok(postService.join(post));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Post> update(@PathVariable Long id,@RequestBody Post post) {
+    public ResponseEntity<PostResponseDto> update(@PathVariable Long id, @RequestBody PostRequestDto post) {
         return ResponseEntity.ok(postService.update(id,post));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Post> delete(@PathVariable Long id){
+    public ResponseEntity<Void> delete(@PathVariable Long id){
         postService.delete(id);
         return ResponseEntity.noContent().build();
     }
