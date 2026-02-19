@@ -23,7 +23,7 @@ public class Post {
     private LocalDateTime createdAt;
 
     @PrePersist
-    public void pre(){
+    public void per(){
         createdAt = LocalDateTime.now();
     }
 
